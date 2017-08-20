@@ -7,6 +7,7 @@ buildscript {
 	}
 	dependencies {
 		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+		classpath('se.transmode.gradle:gradle-docker:1.2')
 	}
 }
 
@@ -32,7 +33,7 @@ dependencies {
 
 task buildDocker(type: Docker) {
 	baseImage = 'develar/java:latest'
-	//push = true
+	push = true
 	tagVersion="v2"
 	tag = 'bijoythomask/todo'
 	addFile {
@@ -45,7 +46,7 @@ task buildDocker(type: Docker) {
 
 
 task buildDocker2(type: Docker, dependsOn: build) {
-	//push = true
+	push = true
 	applicationName = jar.baseName
 	dockerfile = file('src/main/docker/Dockerfile')
 	doFirst {
