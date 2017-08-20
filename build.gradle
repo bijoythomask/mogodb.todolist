@@ -13,6 +13,7 @@ buildscript {
 apply plugin: 'java'
 apply plugin: 'idea'
 apply plugin: 'org.springframework.boot'
+apply plugin: 'docker'
 
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = 1.8
@@ -28,3 +29,31 @@ dependencies {
 	compile('org.projectlombok:lombok:1.16.16')
 	testCompile('org.springframework.boot:spring-boot-starter-test')
 }
+
+task buildDocker(type: Docker) {
+	baseImage = 'develar/java:latest'
+	push = true
+	tagVersion="v2"
+	tag = 'getmub/todo'
+	addFile {
+		from jar
+		rename {'app.jar'}
+	}
+	entryPoint(['java', '-Djava.security.egd=file:/dev/./urandom', '-jar', '/app.jar'])
+	exposePort(8080)
+}
+
+
+task buildDocker2(type: Docker, dependsOn: build) {
+	push = true
+	applicationName = jar.baseName
+	dockerfile = file('src/main/docker/Dockerfile')
+	doFirst {
+		copy {
+			from jar
+			into stageDir
+		}
+	}
+}
+
+buildDocker.dependsOn(build)
