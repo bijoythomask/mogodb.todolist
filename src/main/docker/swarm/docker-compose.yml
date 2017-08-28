@@ -1,8 +1,8 @@
-version: '2'
+version: '3'
 services:
  mymongo:
   image: mongo
-  container_name: spring-demo-mongo
+
   ports:
    - "27017"
   volumes:
@@ -11,7 +11,7 @@ services:
    - net1
  todo:
   image: bijoythomask/todo.mongo:v3
-  container_name: spring-demo-service2
+
   depends_on:
     - mymongo
   ports:
@@ -26,6 +26,6 @@ volumes:
 networks:
  net1:
   external:
-      name: spring_demo_net
+      name: swarm-spring-demo
   # Use a custom driver
   #driver: pring_demo_net

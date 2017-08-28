@@ -23,7 +23,6 @@ repositories {
 	mavenCentral()
 }
 
-
 dependencies {
 	compile('org.springframework.boot:spring-boot-starter-data-mongodb')
 	compile('org.springframework.boot:spring-boot-starter-web')
@@ -32,10 +31,10 @@ dependencies {
 }
 
 task buildDocker(type: Docker) {
-	baseImage = 'develar/java:latest'
+	baseImage = 'frolvlad/alpine-oraclejdk8:slim'
 	push = true
 	tagVersion="v3"
-	tag = 'bijoythomask/todo'
+	tag = 'bijoythomask/todo.mongo'
 	addFile {
 		from jar
 		rename {'app.jar'}
@@ -45,7 +44,7 @@ task buildDocker(type: Docker) {
 }
 
 
-task buildDocker2(type: Docker, dependsOn: build) {
+task buildDockerFromfile(type: Docker, dependsOn: build) {
 	push = true
 	applicationName = jar.baseName
 	dockerfile = file('src/main/docker/Dockerfile')
